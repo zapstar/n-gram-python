@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-
+"""
+Module that can generate N-Grams from a Shakespear's play
+"""
 import itertools
 import re
 import string
@@ -13,9 +15,9 @@ def dialogs(lines):
     :param lines: Generator object containing lines of HTML page
     :return: Yield lines if they match dialog's regular expression.
     """
-    r = re.compile(r'<A NAME=\d+\.\d+\.\d+>(.*)</A><br>')
+    regex = re.compile(r'<A NAME=\d+\.\d+\.\d+>(.*)</A><br>')
     for line in lines:
-        for match in r.finditer(line):
+        for match in regex.finditer(line):
             yield match.groups(0)[0]
 
 
@@ -43,21 +45,19 @@ def words(lines):
             yield word.strip().lower()
 
 
-def ngrams(lines, n):
+def ngrams(lines, num):
     """
     Take the lines and yield n-grams from it
     :param lines: Lines
     :param n: Size of each n-gram
     :return: Yield each n-gram one after another
     """
-    dq = deque(maxlen=n)
     w_gen = words(lines)
-    # Add N - 1 elements to dq
-    for _ in itertools.repeat(None, n - 1):
-        dq.append(next(w_gen))
+    # Add N - 1 elements to deque, deque has max len of N in n-grams
+    d_q = deque(itertools.islice(w_gen, num - 1), maxlen=num)
     for word in w_gen:
-        dq.append(word)
-        yield ' '.join(dq)
+        d_q.append(word)
+        yield ' '.join(d_q)
 
 
 def parse_and_gen(file_name, ngram_count, item_count):
