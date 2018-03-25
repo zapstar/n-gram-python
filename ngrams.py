@@ -42,7 +42,7 @@ def words(line):
     """
     regex = re.compile(r'(\w+)')
     for match in regex.finditer(line):
-        yield match.groups(0)[0]
+        yield match.group(0)
 
 
 def ngrams(iwords, num):
