@@ -45,17 +45,17 @@ def words(line):
         yield match.group(0)
 
 
-def ngrams(iwords, num):
+def ngrams(words, num):
     """
     Take the lines and yield n-grams from it
-    :param iwords: Words iterator
+    :param words: Words to be processed
     :param n: Size of each n-gram
     :return: Yield each n-gram one after another
     """
-    dq_words, iwords = itertools.tee(iwords)
+    words = iter(words)
     # Add N - 1 elements to deque, deque has max len of N in n-grams
-    d_q = deque(itertools.islice(dq_words, num - 1), maxlen=num)
-    for word in itertools.islice(iwords, num - 1, None):
+    d_q = deque(itertools.islice(words, num - 1), maxlen=num)
+    for word in words:
         d_q.append(word)
         yield ' '.join(d_q)
 
